@@ -1,10 +1,9 @@
 <?php
 
-namespace models;
+namespace app\views\tasks;
 
-class Task
+class TaskView
 {
-
     public function __construct () {
 
     }
