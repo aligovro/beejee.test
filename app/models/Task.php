@@ -14,6 +14,25 @@ class Task
         $this->db = Database::getInstance();
     }
 
+
+    /**
+     * Получение задач с возможностью пагинации
+     *
+     * @param int|null $page Номер страницы (опционально)
+     * @param int $perPage Количество задач на странице
+     * @return array|false Массив задач или false в случае ошибки
+     * @throws Exception
+     */
+    public function getTasks(?int $page = 1, int $perPage = 3, $orderBy = 'id', $orderByType = 'desc')
+    {
+        try {
+            return $this->db->selectWithPagination('{#}tasks', ['*'], '', [], "{$orderBy} {$orderByType}", $page, $perPage);
+        } catch (Exception $e) {
+            throw new Exception("Failed to retrieve tasks: " . $e->getMessage());
+        }
+    }
+
+
     /**
      * Создание новой задачи
      *
@@ -48,12 +67,28 @@ class Task
      * @return bool
      * @throws Exception
      */
-    public function editTask(int $taskId, array $data)
+    public function updateTask(int $taskId, array $data)
     {
         try {
             return $this->db->update('{#}tasks', 'id = ?', $data);
         } catch (Exception $e) {
             throw new Exception("Failed to edit task: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Получение задачи по ID
+     *
+     * @param int $taskId
+     * @return array|false
+     * @throws Exception
+     */
+    public function getTaskById(int $taskId)
+    {
+        try {
+            return $this->db->selectById('{#}tasks', $taskId);
+        } catch (Exception $e) {
+            throw new Exception("Failed to retrieve task by ID: " . $e->getMessage());
         }
     }
 

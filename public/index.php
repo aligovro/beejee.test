@@ -4,8 +4,7 @@ use app\database\Database;
 use app\routes\Router;
 
 define('APP_ROOT', dirname(__DIR__));
-
-define('SESSION_START', true);
+session_start();
 
 header('Content-type:text/html; charset=utf-8');
 header('X-Powered-By: Ali');
