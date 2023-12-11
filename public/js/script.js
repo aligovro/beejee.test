@@ -31,6 +31,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     showSuccessMessage('Task updated successfully!');
                 } else if (response.success) {
                     showSuccessMessage('Task created successfully!');
+                    setTimeout(function () {
+                        window.location.href = '/';
+                    }, 2000);
                 }
             });
         });
