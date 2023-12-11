@@ -17,4 +17,22 @@ class MainController
             : false;
     }
 
+    protected function jsonResponse($statusCode, $data)
+    {
+        http_response_code($statusCode);
+        header('Content-Type: application/json');
+        echo json_encode($data);
+        exit;
+    }
+
+    protected function validateEmail($email): bool
+    {
+        return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+    }
+
+    protected function validateRequiredText($text): bool
+    {
+        return !empty($text);
+    }
+
 }

@@ -2,12 +2,15 @@
 
 namespace app\views\tasks;
 
+use app\traits\StrTrait;
 use app\views\layouts\LayoutView;
 
 class TaskForm
 {
     private $isAuthUser;
     private $task;
+
+    use StrTrait;
     public function __construct($task = null, $isAuthUser = false)
     {
         $this->task = $task;
@@ -18,12 +21,12 @@ class TaskForm
     {
         ob_start();
         ?>
-        <h2><?= $this->task['text'] ?? 'Creating new task' ?></h2>
+        <h2><?= $this->task['text'] ? $this->setHtmlspecialchars($this->task['text']) : 'Creating new task' ?></h2>
 
         <form id="addTaskForm">
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username" value="<?= $this->task['username'] ?? '' ?>" required>
+                <input type="text" class="form-control" id="username" name="username" value="<?= $this->task['username'] ? $this->setHtmlspecialchars($this->task['username']) : '' ?>" required>
                 <div class="invalid-feedback username">
                     Invalid username
                 </div>
@@ -37,7 +40,7 @@ class TaskForm
             </div>
             <div class="mb-3">
                 <label for="text" class="form-label">Text</label>
-                <input type="text" class="form-control" id="text" name="text" value="<?= $this->task['text'] ?? '' ?>" required>
+                <input type="text" class="form-control" id="text" name="text" value="<?= $this->task['text'] ? $this->setHtmlspecialchars($this->task['text']) : '' ?>" required>
                 <div class="invalid-feedback text">
                     Invalid text
                 </div>
@@ -52,7 +55,7 @@ class TaskForm
                 </div>
                 <input type="hidden" id="taskId" name="taskId" value="<?= $this->task['id'] ?? '' ?>">
             <?php endif; ?>
-            <button type="button" class="btn btn-primary" id="updateTaskBtn"><?= $this->task ? 'Обновить задачу' : 'Добавить задачу' ?></button>
+            <button type="button" class="btn btn-primary" id="updateTaskBtn"><?= $this->task ? 'Update task' : 'Create task' ?></button>
         </form>
         <?php
 
