@@ -21,12 +21,12 @@ class TaskForm
     {
         ob_start();
         ?>
-        <h2><?= $this->task['text'] ? $this->setHtmlspecialchars($this->task['text']) : 'Creating new task' ?></h2>
+        <h2><?= $this->task ? 'Updating new task' : 'Creating new task' ?></h2>
 
         <form id="addTaskForm">
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username" value="<?= $this->task['username'] ? $this->setHtmlspecialchars($this->task['username']) : '' ?>" required>
+                <input type="text" class="form-control" id="username" name="username" value="<?= $this->task ? $this->setHtmlspecialchars($this->task['username']) : '' ?>" required>
                 <div class="invalid-feedback username">
                     Invalid username
                 </div>
@@ -40,7 +40,7 @@ class TaskForm
             </div>
             <div class="mb-3">
                 <label for="text" class="form-label">Text</label>
-                <input type="text" class="form-control" id="text" name="text" value="<?= $this->task['text'] ? $this->setHtmlspecialchars($this->task['text']) : '' ?>" required>
+                <input type="text" class="form-control" id="text" name="text" value="<?= $this->task ? $this->setHtmlspecialchars($this->task['text']) : '' ?>" required>
                 <div class="invalid-feedback text">
                     Invalid text
                 </div>
