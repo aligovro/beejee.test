@@ -54,13 +54,41 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    let currentUrl = new URL(window.location.href);
-    let currentSort = currentUrl.searchParams.get('sort');
-    let sortSelect = document.getElementById('sortSelect');
-    if (currentSort) {
-        sortSelect.value = currentSort;
+    updateSortSelectValue('sortSelect', 'sort');
+    updateSortSelectValue('sortTypeSelect', 'sortType');
+
+    let loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            let username = document.getElementById('loginUsername').value;
+            let password = document.getElementById('loginPassword').value;
+
+            sendAjaxRequest('/auth/login', 'POST', {
+                username: username,
+                password: password
+            }, function (response) {
+                if (response.success) {
+                    window.location.href = '/';
+                } else {
+                    showErrorMessage('Authentication failed. Please check your credentials.');
+                }
+            }, function (status, statusText) {
+                showErrorMessage(`Error: ${status} - ${statusText}`);
+            });
+        });
     }
 });
+
+const updateSortSelectValue = (selectId, paramName) => {
+    let currentUrl = new URL(window.location.href);
+    let currentValue = currentUrl.searchParams.get(paramName);
+    let selectElement = document.getElementById(selectId);
+    if (currentValue) {
+        selectElement.value = currentValue;
+    }
+};
 
 function sendAjaxRequest(url, method, data, successCallback, errorCallback) {
     let xhr = new XMLHttpRequest();
@@ -79,8 +107,9 @@ function sendAjaxRequest(url, method, data, successCallback, errorCallback) {
                     console.log('Ответ сервера:', xhr.responseText);
                 }
             } else {
-                if (errorCallback && typeof errorCallback === 'function') {
-                    errorCallback(xhr.status, xhr.statusText);
+                let response = JSON.parse(xhr.responseText);
+                if (errorCallback) {
+                    errorCallback(xhr.status, response.error || xhr.statusText);
                 }
             }
         }
@@ -88,17 +117,25 @@ function sendAjaxRequest(url, method, data, successCallback, errorCallback) {
     xhr.send(JSON.stringify(data));
 }
 
-function showSuccessMessage(message) {
-    let successMessageElement = document.createElement('div');
-    successMessageElement.className = 'alert alert-success mt-3';
-    successMessageElement.textContent = message;
-    let formElement = document.getElementById('addTaskForm');
-    if (formElement) {
-        formElement.parentNode.insertBefore(successMessageElement, formElement);
+function showAlert(message, type) {
+    let messageElement = document.createElement('div');
+    messageElement.className = `alert alert-${type} mt-3`;
+    messageElement.textContent = message;
+    let showAlert = document.getElementById('showAlert');
+    if (showAlert) {
+        showAlert.appendChild(messageElement);
     }
     setTimeout(function () {
-        successMessageElement.style.display = 'none';
+        messageElement.remove();
     }, 3000);
+}
+
+function showSuccessMessage(message) {
+    showAlert(message, 'success');
+}
+
+function showErrorMessage(message) {
+    showAlert(message, 'danger');
 }
 function isValidEmail(email) {
     let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -107,6 +144,11 @@ function isValidEmail(email) {
 function sortTasks(sortBy) {
     let currentUrl = new URL(window.location.href);
     currentUrl.searchParams.set('sort', sortBy);
+    window.location.href = currentUrl.toString();
+}
+function sortSortByType(sortByType) {
+    let currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.set('sortType', sortByType);
     window.location.href = currentUrl.toString();
 }
 function validateRequiredField(value, fieldName) {

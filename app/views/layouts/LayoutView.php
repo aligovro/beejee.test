@@ -53,6 +53,7 @@ class LayoutView extends MainController
                             </div>
                         </div>
                     </header>
+                    <div class="container" id="showAlert"></div>
                     <div class="container m-40">
                         <?= $this->content ?>
                     </div>

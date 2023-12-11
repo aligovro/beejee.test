@@ -19,7 +19,7 @@ class AuthView
         ?>
         <h2>Welcome to site</h2>
         <?php if (!$this->isAuthUser): ?>
-            <form action="/auth/login" method="post">
+            <form action="/auth/login" method="post" id="loginForm">
                 <div class="mb-3">
                     <label for="loginUsername" class="form-label">username:</label>
                     <input type="text" class="form-control" id="loginUsername" name="username" required>

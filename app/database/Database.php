@@ -45,11 +45,6 @@ class Database
         if (!empty($this->options['clear_sql_mode'])) {
             $this->mysqli->query("SET sql_mode=''");
         }
-
-        if (!empty($this->options['aes_key'])) {
-            $key = $this->mysqli->real_escape_string($this->options['aes_key']);
-            $this->mysqli->query("SELECT @aeskey:='{$key}'");
-        }
     }
 
     public function query(string $sql, $params = null): bool

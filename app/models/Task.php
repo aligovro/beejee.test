@@ -51,11 +51,11 @@ class Task
             'text' => $text,
             'status' => $status,
         ];
-
         try {
-            return $this->db->insert('{#}tasks', $data);
+            $this->db->insert('{#}tasks', $data);
+            return true;
         } catch (Exception $e) {
-            throw new Exception("Failed to create task: " . $e->getMessage());
+            return false;
         }
     }
 

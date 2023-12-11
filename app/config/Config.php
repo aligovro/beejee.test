@@ -6,7 +6,6 @@ class Config
 {
     public static function getConfigData()
     {
-        $randomAesKey = bin2hex(random_bytes(32));
         return [
             'root' => '/',
             'host' => 'http://beejee.loc',
@@ -20,7 +19,6 @@ class Config
             'db_charset' => 'utf8',
             'clear_sql_mode' => 1,
             'debug' => true,
-            'aes_key' => $randomAesKey,
         ];
     }
 }

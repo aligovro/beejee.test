@@ -29,18 +29,26 @@ class AuthController extends MainController
 
     public function login()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = $_POST['username'];
-            $password = $_POST['password'];
-            $userId = $this->userModel->authenticate($username, $password);
-            if ($userId) {
-                $_SESSION['user_id'] = $userId;
-                $_SESSION['user_name'] = $username;
-                header("Location: /");
-                exit();
-            } else {
-                echo "Неправильные учетные данные. Попробуйте снова.";
-            }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->jsonResponse(400, ['error' => 'Invalid request']);
+        }
+
+        $rawData = file_get_contents('php://input');
+        $requestData = json_decode($rawData, true);
+
+        $username = $requestData['username'];
+        $password = $requestData['password'];
+        if (!$this->validateRequiredText($username) || !$this->validateRequiredText($password)) {
+            $this->jsonResponse(400, ['error' => 'Field is required']);
+        }
+        $userId = $this->userModel->authenticate($username, $password);
+
+        if ($userId) {
+            $_SESSION['user_id'] = $userId;
+            $_SESSION['user_name'] = $username;
+            $this->jsonResponse(200, ['success' => true]);
+        } else {
+            $this->jsonResponse(400, ['error' => 'Incorrect credentials. Try again.']);
         }
     }
 
@@ -49,16 +57,14 @@ class AuthController extends MainController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = $_POST['username'];
             $password = $_POST['password'];
-
             $userId = $this->userModel->createUser($username, $password);
-
             if ($userId) {
                 $_SESSION['user_id'] = $userId;
                 $_SESSION['user_name'] = $username;
                 header("Location: /");
                 exit();
             } else {
-                echo "Ошибка регистрации. Попробуйте снова.";
+                $this->jsonResponse(400, ['error' => 'Register error. Try again.']);
             }
         }
     }
